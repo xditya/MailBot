@@ -56,7 +56,7 @@ def str_to_list(text):  # Returns List
 
 
 def list_to_str(list):  # Returns String  # sourcery skip: avoid-builtin-shadow
-    str = "".join(f"{x}" for x in list)
+    str = " ".join(f"{x}" for x in list)
     return str.strip()
 
 
