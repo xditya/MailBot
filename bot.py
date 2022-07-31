@@ -266,9 +266,8 @@ async def get_mails(ev, email):
 @bot.on(events.CallbackQuery(data=re.compile("ref_(.*)")))
 async def refresh_mb(event):
     email = event.pattern_match.group(1).decode("utf-8")
-    ev = await event.edit("Parsing emails...")
     with contextlib.suppress(errors.MessageNotModifiedError):
-        mails = await get_mails(ev, email)
+        mails = await get_mails(event, email)
         if not mails:
             return
         buttons = []
@@ -278,7 +277,7 @@ async def refresh_mb(event):
                 buttons.append(
                     [Button.inline(subj, data=f"ex_{email}_{mail.get('id')}")]
                 )
-        await ev.edit(
+        await event.edit(
             f"Current email address: `{email}`\nReceived emails: {len(mails)}\nClick on the buttons below to read the corresponding e-mail.",
             buttons=buttons,
         )
