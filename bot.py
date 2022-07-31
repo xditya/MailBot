@@ -141,6 +141,9 @@ async def domain_list(event):
 
 @bot.on(events.NewMessage(pattern="^/generate"))
 async def gen_id(event):
+    if not await check_user(event.sender_id):
+        await event.reply("Kindly join @BotzHub to be able to use this bot!")
+        return
     e = await event.reply("Please wait...")
     resp = get("https://www.1secmail.com/api/v1/?action=getDomainList")
     if resp.status_code != 200:
@@ -266,6 +269,7 @@ async def get_mails(ev, email):
 @bot.on(events.CallbackQuery(data=re.compile("ref_(.*)")))
 async def refresh_mb(event):
     email = event.pattern_match.group(1).decode("utf-8")
+    await event.answer("Refreshing...")
     with contextlib.suppress(errors.MessageNotModifiedError):
         mails = await get_mails(event, email)
         if not mails:
@@ -281,6 +285,7 @@ async def refresh_mb(event):
             f"Current email address: `{email}`\nReceived emails: {len(mails)}\nClick on the buttons below to read the corresponding e-mail.",
             buttons=buttons,
         )
+    await event.answer("Refreshed")
 
 
 @bot.on(events.CallbackQuery(data=re.compile("ex_(.*)")))
