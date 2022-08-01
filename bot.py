@@ -8,7 +8,7 @@ import re
 from decouple import config
 from aioredis import Redis
 from requests import get
-from telegraph import Telegraph
+from html_telegraph_poster import TelegraphPoster
 
 from telethon import Button, TelegramClient, events, functions, errors
 
@@ -39,8 +39,8 @@ except Exception as e:
     log.warning(e)
     exit(1)
 
-telegraph = Telegraph()
-telegraph.create_account(short_name="MailBot - @BotzHub")
+t = TelegraphPoster(use_api=True)
+t.create_api_token("@TheEmailBot", "MailBot", "https://www.xditya.me/")
 
 REDIS_URI = REDIS_URI.split(":")
 db = Redis(
@@ -86,6 +86,7 @@ async def get_all(var):  # Returns List
     return [""] if users is None or users == "" else str_to_list(users)
 
 
+# join checks
 async def check_user(user):
     ok = True
     try:
@@ -295,6 +296,7 @@ async def read_mail(event):
     email, mail_id = args.split("_")
     username, domain = email.split("@")
     mails = await get_mails(ev, email)
+    user = await event.get_sender()
     if not mails:
         return
     c = 0
@@ -312,11 +314,10 @@ async def read_mail(event):
                 log.exception("Error parsing email content: %s", exc)
                 return
             msg = f"**__New Email__**\n\n**From:** `{content.get('from')}`\n**Subject:** `{content.get('subject')}`\n**Message:**"
-            response = telegraph.create_page(
-                "MailBot - @BotzHub",
-                html_content=content.get("body")
-                .replace("<div>", "")
-                .replace("</div>", ""),
+            response = t.post(
+                title=f"Email for {user.first_name}",
+                author="@TheEmailBot",
+                text=content.get("body"),
             )
             msg += f" [read message]({response.get('url')})\n"
             if attachments := content.get("attachments"):

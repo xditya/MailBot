@@ -3,4 +3,4 @@ telethon==1.24.0
 aioredis
 hiredis
 requests
-telegraph
+html-telegraph-poster
