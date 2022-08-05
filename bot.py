@@ -280,7 +280,7 @@ async def refresh_mb(event):
             if subj := mail.get("subject"):
                 subj = f"{subj[:10]}..."
                 buttons.append(
-                    [Button.inline(subj, data=f"ex_{email}_{mail.get('id')}")]
+                    [Button.inline(subj, data=f"ex_{email}||{mail.get('id')}")]
                 )
         await event.edit(
             f"Current email address: `{email}`\nReceived emails: {len(mails)}\nClick on the buttons below to read the corresponding e-mail.",
@@ -293,7 +293,7 @@ async def refresh_mb(event):
 async def read_mail(event):
     ev = await event.edit("Please wait...")
     args = event.pattern_match.group(1).decode("utf-8")
-    email, mail_id = args.split("_")
+    email, mail_id = args.split("||")
     username, domain = email.split("@")
     mails = await get_mails(ev, email)
     user = await event.get_sender()
