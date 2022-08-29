@@ -278,7 +278,7 @@ async def refresh_mb(event):
         buttons = []
         for mail in mails[:50]:
             if subj := mail.get("subject"):
-                subj = f"{subj[:10]}..."
+                subj = f"{subj[:50]}..."
                 buttons.append(
                     [Button.inline(subj, data=f"ex_{email}||{mail.get('id')}")]
                 )

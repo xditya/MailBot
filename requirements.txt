@@ -3,4 +3,4 @@ telethon==1.24.0
 aioredis
 hiredis
 requests
-html-telegraph-poster
+git+https://github.com/xditya/html-telegraph-poster
