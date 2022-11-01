@@ -378,7 +378,8 @@ async def broad(e):
                 link_preview=False,
             )
             done += 1
-        except Exception:
+        except Exception as brd_er:
+            log.error("Broadcast error:\nChat: %d\nError: %s", int(i), brd_er)
             error += 1
     await xx.edit("Broadcast completed.\nSuccess: {}\nFailed: {}".format(done, error))
 
